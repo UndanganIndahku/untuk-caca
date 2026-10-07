@@ -123,7 +123,7 @@ function openGift() {
     setTimeout(() => {
         document.getElementById('gift-message').innerHTML = `
             <div class="bg-rose-100 border border-rose-300 text-rose-800 p-4 rounded-xl text-sm font-serif italic shadow-inner">
-                🎁 "Kejutan terindah dalam hidup adalah kehadiran orang-orang baik seperti Caca. Semoga harimu menyenangkan!"
+                🎁 "Kejutan terindah dalam hidup adalah kehadiran orang-orang baik seperti Aca. Semoga happy selalu yaaa!"
             </div>
         `;
         triggerHeartConfetti();

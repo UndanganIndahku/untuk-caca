@@ -15,9 +15,15 @@ const BIRTHDAY_DATA = {
 
     // Pesan Jurnal Rahasia
     journalLetter: {
-        title: "Catatan Spesial untuk Caca 📖",
-        body: `Selamat ulang tahun yang luar biasa, Caca!\n\nSemoga di lembaran usiamu yang baru ini, setiap hari dipenuhi dengan kebahagiaan, kesehatan, dan petualangan baru yang menyenangkan. Tetaplah menjadi versi terbaik dari dirimu!`,
-        sender: "— Dari Seseorang yang Selalu Mendukungmu ✨"
+        title: "Catatan Spesial untuk Aca 📖",
+
+        body: `Happy birthday, Aca! 🥳🎉\n\nSemoga di umur yang baru ini makin banyak hal baik yang datang ke Aca. Semoga apa yang Aca semogakan bisa satu-satu terwujud, dimudahkan dalam segala urusan, dan tentunya sehat selalu.
+
+        Makasih juga udah jadi teman yang asik dan seru selama ini walaupun kita baru kenal ya hehe. Semoga kita tetap bisa temenan, ngobrol random, ketawa-ketawa, dan saling support terus ya.
+
+        Pokoknya selamat ulang tahun, Aca! Semoga hari ini menyenangkan😂`,
+
+        sender: "— Dari Toddlermu ✨"
     },
 
     // Foto Kenangan (Model Polaroid)
