@@ -1,47 +1,51 @@
-const BIRTHDAY_DATA = {
-    // Akses Masuk
-    targetName: "caca",
-    secretPassword: "cumi",
-    whatsappNumber: "6282384613484", // Ubah dengan nomor WhatsApp Anda
+/* ==========================================================================
+   KONFIGURASI DATA WEBSITE ULANG TAHUN CACA
+   ========================================================================== */
 
-    // Musik Latar
-    musicUrl: "ultah.mp3",
+const appData = {
+    // 1. KREDENSIAL LOGIN
+    username: "caca",
+    password: "cumi", 
 
-    // Tanggal Target Hitung Mundur (17 November 2026)
+    // 2. TANGGAL TARGET HITUNG MUNDUR ULANG TAHUN (Format: YYYY-MM-DDTHH:mm:ss)
     targetDate: "2026-11-04T00:00:00",
 
-    // Foto Utama (Tampil di bawah ucapan)
-    profileImage: "aca.jpeg",
+    // 3. NOMOR WHATSAPP TUJUAN (Awali dengan kode negara tanpa tanda '+', contoh: 628...)
+    whatsappNumber: "6282384613484",
 
-    // Pesan Jurnal Rahasia
-    journalLetter: {
-        title: "Catatan Spesial untuk Aca 📖",
+    // 4. GALERI FOTO POLAROID
+    photos: [
+        { 
+            url: "aca1.jpeg", 
+            caption: "Blonde ✨" 
+        },
+        { 
+            url: "aca2.jpeg", 
+            caption: "Senyum 🌸" 
+        },
+        { 
+            url: "aca3.jpeg", 
+            caption: "Jutek 🎉" 
+        }
+    ],
 
-        body: `Happy birthday, Aca! 🥳🎉\n\nSemoga di umur yang baru ini makin banyak hal baik yang datang ke Aca. Semoga apa yang Aca semogakan bisa satu-satu terwujud, dimudahkan dalam segala urusan, dan tentunya sehat selalu.
+    // 5. KATA-KATA KEJUTAN (KOTAK HADIAH)
+    giftMessages: [
+        "✨ Selamat! Kamu mendapatkan pelukan hangat dan doa terbaik hari ini!",
+        "🎁 Kejutan! Semoga semua keinginanmu di tahun ini dikabulkan!",
+        "🌸 Hadiah terbaik adalah senyumanmu. Tetaplah bersinar!"
+    ],
+
+    // 6. ISI SURAT SPESIAL
+    letter: {
+        title: "Selamat Ulang Tahun Caca!",
+        body: `Happy birthday, Aca! 🥳🎉
+
+        Semoga di umur yang baru ini makin banyak hal baik yang datang ke Aca. Semoga apa yang Aca semogakan bisa satu-satu terwujud, dimudahkan dalam segala urusan, dan tentunya sehat selalu.
 
         Makasih juga udah jadi teman yang asik dan seru selama ini walaupun kita baru kenal ya hehe. Semoga kita tetap bisa temenan, ngobrol random, ketawa-ketawa, dan saling support terus ya.
 
-        Pokoknya selamat ulang tahun, Aca! Semoga hari ini menyenangkan😂`,
-
-        sender: "— Dari Toddlermu ✨"
-    },
-
-    // Foto Kenangan (Model Polaroid)
-    polaroids: [
-        {
-            image: "aca1.jpeg",
-            caption: "Blonde 🌸",
-            rotate: "-rotate-3"
-        },
-        {
-            image: "aca2.jpeg",
-            caption: "Senyum Tipis 🎈",
-            rotate: "rotate-2"
-        },
-        {
-            image: "aca3.jpeg",
-            caption: "Jutek ✨",
-            rotate: "-rotate-2"
-        }
-    ]
+        Pokoknya selamat ulang tahun, Aca! Semoga hari ini menyenangkan 😂`,
+        sender: "~ Dari Toddlermu ✨"
+    }
 };

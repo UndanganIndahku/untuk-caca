@@ -1,170 +1,218 @@
-let isGiftOpened = false;
+/* ==========================================================================
+   LOGIKA INTERAKTIF WEBSITE ULANG TAHUN CACA
+   ========================================================================== */
 
-window.onload = function() {
-    initWebsite();
-};
+let isCandleLit = true;
+let isMusicPlaying = false;
 
-function initWebsite() {
-    if (typeof BIRTHDAY_DATA === 'undefined') return;
-
-    // Menyiapkan Musik
-    const audioSource = document.getElementById('bg-music-source');
-    const audio = document.getElementById('bg-music');
-    if (audioSource && audio && BIRTHDAY_DATA.musicUrl) {
-        audioSource.src = BIRTHDAY_DATA.musicUrl;
-        audio.load();
-    }
-
-    // Menyiapkan Foto & Isi Jurnal
-    document.getElementById('profile-img').src = BIRTHDAY_DATA.profileImage;
-    document.getElementById('letter-title').innerText = BIRTHDAY_DATA.journalLetter.title;
-    document.getElementById('letter-body').innerText = BIRTHDAY_DATA.journalLetter.body;
-    document.getElementById('letter-sender').innerText = BIRTHDAY_DATA.journalLetter.sender;
-
-    // Menyiapkan Galeri Polaroid
-    const polaroidContainer = document.getElementById('polaroid-gallery');
-    if (polaroidContainer) {
-        polaroidContainer.innerHTML = '';
-        BIRTHDAY_DATA.polaroids.forEach(item => {
-            const card = document.createElement('div');
-            card.className = `polaroid-card bg-white p-4 pb-6 rounded-sm shadow-xl transform ${item.rotate} hover:rotate-0 transition-all duration-300 hover:scale-105 hover:z-20 border border-stone-200`;
-            card.innerHTML = `
-                <div class="overflow-hidden aspect-square mb-3 bg-stone-100">
-                    <img src="${item.image}" alt="Memory" class="w-full h-full object-cover">
-                </div>
-                <p class="font-handwriting text-center text-stone-700 text-xl">${item.caption}</p>
-            `;
-            polaroidContainer.appendChild(card);
-        });
-    }
-
+// INISIALISASI SAAT HALAMAN DIMUAT
+window.addEventListener('DOMContentLoaded', () => {
+    renderGallery();
     startCountdown();
-}
+    loadLetterContent();
+});
 
-function handleLogin(e) {
-    if (e) e.preventDefault();
-
-    const nameInput = document.getElementById('username').value.trim().toLowerCase();
-    const passInput = document.getElementById('password').value.trim().toLowerCase();
+// HANDLER LOGIN
+function handleLogin(event) {
+    event.preventDefault();
+    const userIn = document.getElementById('username').value.trim();
+    const passIn = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('error-message');
 
-    if (nameInput === BIRTHDAY_DATA.targetName.toLowerCase() && passInput === BIRTHDAY_DATA.secretPassword.toLowerCase()) {
-        if (errorMsg) errorMsg.classList.add('hidden');
-
-        // Memutar musik saat tombol diklik
-        const audio = document.getElementById('bg-music');
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().then(() => {
-                updateMusicUI(true);
-            }).catch(err => {
-                console.log("Autoplay terhalang: ", err);
-                updateMusicUI(false);
-            });
-        }
-
-        const loginSection = document.getElementById('login-section');
+    if (userIn.toLowerCase() === appData.username && passIn === appData.password) {
+        // Login Berhasil
+        document.getElementById('login-section').classList.add('hidden');
         const mainContent = document.getElementById('main-content');
+        mainContent.classList.remove('hidden');
+        
+        // Trigger Confetti Awal Login
+        confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
 
-        loginSection.classList.add('scale-95', 'opacity-0');
-        setTimeout(() => {
-            loginSection.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            triggerHeartConfetti();
-        }, 500);
+        // Auto play musik latar
+        toggleMusic(true);
     } else {
-        if (errorMsg) errorMsg.classList.remove('hidden');
+        errorMsg.classList.remove('hidden');
     }
 }
 
+// KONTROL PEMUTAR MUSIK
+function toggleMusic(forcePlay = false) {
+    const music = document.getElementById('bg-music');
+    const musicText = document.getElementById('music-text');
+    const musicIcon = document.getElementById('music-icon');
+
+    if (!isMusicPlaying || forcePlay) {
+        music.play().then(() => {
+            isMusicPlaying = true;
+            musicText.innerText = "Hentikan Musik";
+            musicIcon.classList.add('animate-spin');
+        }).catch(e => {
+            console.log("Autoplay diblokir oleh browser atau file audio tidak ditemukan:", e);
+        });
+    } else {
+        music.pause();
+        isMusicPlaying = false;
+        musicText.innerText = "Putar Musik";
+        musicIcon.classList.remove('animate-spin');
+    }
+}
+
+// TIUP / PADAMKAN LILIN KUE ULANG TAHUN
+function extinguishCandle() {
+    if (!isCandleLit) return;
+
+    const flame = document.getElementById('flame');
+    const smoke = document.getElementById('smoke');
+    const blowBtnText = document.getElementById('blow-btn-text');
+    const wishMsg = document.getElementById('wish-message');
+
+    // Matikan Api & Munculkan Efek Asap
+    flame.style.display = 'none';
+    smoke.classList.add('smoke-active');
+    isCandleLit = false;
+
+    blowBtnText.innerText = "Lilin Telah Dipadamkan ✨";
+    wishMsg.classList.remove('hidden');
+
+    // Efek Confetti Meriah saat Lilin Padam
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+        });
+        confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    })();
+}
+
+// RENDER GALERI POLAROID DARI DATA.JS
+function renderGallery() {
+    const gallery = document.getElementById('polaroid-gallery');
+    if (!gallery) return;
+
+    gallery.innerHTML = appData.photos.map((item) => `
+        <div class="journal-paper tape-effect p-3.5 rounded-2xl polaroid-card cursor-pointer" onclick="triggerPhotoConfetti()">
+            <div class="overflow-hidden rounded-xl bg-stone-100 aspect-square">
+                <img src="${item.url}" alt="${item.caption}" class="w-full h-full object-cover hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/400x400/f87171/ffffff?text=Caca'">
+            </div>
+            <p class="font-handwriting text-xl text-stone-700 mt-3 font-semibold">${item.caption}</p>
+        </div>
+    `).join('');
+}
+
+function triggerPhotoConfetti() {
+    confetti({
+        particleCount: 30,
+        spread: 50,
+        origin: { y: 0.7 }
+    });
+}
+
+// BUKA KOTAK HADIAH
+function openGift() {
+    const giftIcon = document.getElementById('gift-icon');
+    const giftMsg = document.getElementById('gift-message');
+    
+    giftIcon.innerHTML = `<i class="fa-solid fa-box-open text-rose-500 text-5xl animate-pulse"></i>`;
+    
+    const randomMsg = appData.giftMessages[Math.floor(Math.random() * appData.giftMessages.length)];
+    
+    giftMsg.innerHTML = `
+        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-semibold leading-relaxed animate-bounce">
+            ${randomMsg}
+        </div>
+    `;
+
+    confetti({
+        particleCount: 60,
+        spread: 80,
+        origin: { y: 0.6 }
+    });
+}
+
+// HITUNG MUNDUR (COUNTDOWN TIMER)
 function startCountdown() {
-    const targetTime = new Date(BIRTHDAY_DATA.targetDate).getTime();
+    const target = new Date(appData.targetDate).getTime();
 
-    const timerInterval = setInterval(() => {
+    function update() {
         const now = new Date().getTime();
-        const difference = targetTime - now;
+        const diff = target - now;
 
-        if (difference < 0) {
-            clearInterval(timerInterval);
-            document.getElementById('countdown-timer').innerHTML = "<span class='font-serif italic text-rose-600 text-lg'>🎉 Hari Bahagia Telah Tiba! 🎉</span>";
+        if (diff <= 0) {
+            document.getElementById('cd-days').innerText = "00";
+            document.getElementById('cd-hours').innerText = "00";
+            document.getElementById('cd-minutes').innerText = "00";
+            document.getElementById('cd-seconds').innerText = "00";
             return;
         }
 
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
-        document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
-        document.getElementById('cd-minutes').innerText = String(minutes).padStart(2, '0');
-        document.getElementById('cd-seconds').innerText = String(seconds).padStart(2, '0');
-    }, 1000);
-}
-
-function triggerHeartConfetti() {
-    if (typeof confetti === 'function') {
-        confetti({
-            particleCount: 80,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#fda4af', '#f43f5e', '#fecdd3']
-        });
+        document.getElementById('cd-days').innerText = days < 10 ? '0' + days : days;
+        document.getElementById('cd-hours').innerText = hours < 10 ? '0' + hours : hours;
+        document.getElementById('cd-minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+        document.getElementById('cd-seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
     }
+
+    update();
+    setInterval(update, 1000);
 }
 
-function openGift() {
-    if (isGiftOpened) return;
-    isGiftOpened = true;
-    
-    const giftBox = document.getElementById('gift-icon');
-    giftBox.classList.add('animate-bounce');
-    
-    setTimeout(() => {
-        document.getElementById('gift-message').innerHTML = `
-            <div class="bg-rose-100 border border-rose-300 text-rose-800 p-4 rounded-xl text-sm font-serif italic shadow-inner">
-                🎁 "Kejutan terindah dalam hidup adalah kehadiran orang-orang baik seperti Aca. Semoga happy selalu yaaa!"
-            </div>
-        `;
-        triggerHeartConfetti();
-    }, 600);
+// MEMUAT ISI SURAT KE DALAM MODAL
+function loadLetterContent() {
+    document.getElementById('letter-title').innerText = appData.letter.title;
+    document.getElementById('letter-body').innerText = appData.letter.body;
+    document.getElementById('letter-sender').innerText = appData.letter.sender;
 }
 
-function sendWhatsAppMessage(e) {
-    if (e) e.preventDefault();
-    const text = document.getElementById('reply-text').value.trim();
-    if (!text) return;
-
-    const encoded = encodeURIComponent(`Halo! Ini pesan balasan ulang tahun dari Caca:\n\n"${text}"`);
-    window.open(`https://wa.me/${BIRTHDAY_DATA.whatsappNumber}?text=${encoded}`, '_blank');
-}
-
-function toggleMusic() {
-    const audio = document.getElementById('bg-music');
-    if (audio.paused) {
-        audio.play();
-        updateMusicUI(true);
-    } else {
-        audio.pause();
-        updateMusicUI(false);
-    }
-}
-
-function updateMusicUI(isPlaying) {
-    const btnText = document.getElementById('music-text');
-    if (btnText) {
-        btnText.innerText = isPlaying ? "Matikan Musik" : "Putar Musik";
-    }
-}
-
+// MODAL SURAT JURNAL
 function openJournalModal() {
     const modal = document.getElementById('journal-modal');
+    const inner = modal.querySelector('div');
     modal.classList.remove('hidden');
-    setTimeout(() => modal.classList.remove('opacity-0'), 10);
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        inner.classList.remove('scale-95');
+        inner.classList.add('scale-100');
+    }, 10);
 }
 
 function closeJournalModal() {
     const modal = document.getElementById('journal-modal');
+    const inner = modal.querySelector('div');
     modal.classList.add('opacity-0');
-    setTimeout(() => modal.classList.add('hidden'), 300);
+    inner.classList.remove('scale-100');
+    inner.classList.add('scale-95');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+// KIRIM PESAN VIA WHATSAPP
+function sendWhatsAppMessage(e) {
+    e.preventDefault();
+    const text = document.getElementById('reply-text').value;
+    const phone = appData.whatsappNumber;
+    const encodedText = encodeURIComponent(`Halo! Ini balasan dari Caca:\n\n"${text}"`);
+    window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
 }
