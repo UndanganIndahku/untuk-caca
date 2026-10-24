@@ -26,6 +26,18 @@ const appData = {
         { 
             url: "aca3.jpeg", 
             caption: "Jutek 🎉" 
+        },
+       { 
+            url: "suami1.jpeg", 
+            caption: "Bergandengan" 
+        },
+        { 
+            url: "suami2.jpeg", 
+            caption: "Malu" 
+        },
+        { 
+            url: "suami3.jpeg", 
+            caption: "Menatap" 
         }
     ],
 
