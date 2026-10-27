@@ -13,8 +13,8 @@ const appData = {
     // 3. NOMOR WHATSAPP TUJUAN (Awali dengan kode negara tanpa tanda '+', contoh: 628...)
     whatsappNumber: "6282384613484",
 
-    // 4. GALERI FOTO POLAROID
-    photos: [
+    // 4. GALERI FOTO POLAROID ATAS (3 Foto Pertama)
+    photosTop: [
         { 
             url: "aca1.jpeg", 
             caption: "Blonde ✨" 
@@ -26,8 +26,12 @@ const appData = {
         { 
             url: "aca3.jpeg", 
             caption: "Jutek 🎉" 
-        },
-       { 
+        }
+    ],
+
+    // GALERI FOTO POLAROID BAWAH (3 Foto Kedua)
+    photosBottom: [
+        { 
             url: "suami1.jpeg", 
             caption: "Bergandengan" 
         },

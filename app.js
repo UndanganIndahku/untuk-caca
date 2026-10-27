@@ -102,19 +102,32 @@ function extinguishCandle() {
     })();
 }
 
-// RENDER GALERI POLAROID DARI DATA.JS
+// RENDER GALERI POLAROID ATAS & BAWAH
 function renderGallery() {
-    const gallery = document.getElementById('polaroid-gallery');
-    if (!gallery) return;
+    const galleryTop = document.getElementById('polaroid-gallery-top');
+    const galleryBottom = document.getElementById('polaroid-gallery-bottom');
 
-    gallery.innerHTML = appData.photos.map((item) => `
-        <div class="journal-paper tape-effect p-3.5 rounded-2xl polaroid-card cursor-pointer" onclick="triggerPhotoConfetti()">
-            <div class="overflow-hidden rounded-xl bg-stone-100 aspect-square">
-                <img src="${item.url}" alt="${item.caption}" class="w-full h-full object-cover hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/400x400/f87171/ffffff?text=Caca'">
+    if (galleryTop && appData.photosTop) {
+        galleryTop.innerHTML = appData.photosTop.map((item) => `
+            <div class="journal-paper tape-effect p-3.5 rounded-2xl polaroid-card cursor-pointer" onclick="triggerPhotoConfetti()">
+                <div class="overflow-hidden rounded-xl bg-stone-100 aspect-square">
+                    <img src="${item.url}" alt="${item.caption}" class="w-full h-full object-cover hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/400x400/f87171/ffffff?text=Caca'">
+                </div>
+                <p class="font-handwriting text-xl text-stone-700 mt-3 font-semibold">${item.caption}</p>
             </div>
-            <p class="font-handwriting text-xl text-stone-700 mt-3 font-semibold">${item.caption}</p>
-        </div>
-    `).join('');
+        `).join('');
+    }
+
+    if (galleryBottom && appData.photosBottom) {
+        galleryBottom.innerHTML = appData.photosBottom.map((item) => `
+            <div class="journal-paper tape-effect p-3.5 rounded-2xl polaroid-card cursor-pointer" onclick="triggerPhotoConfetti()">
+                <div class="overflow-hidden rounded-xl bg-stone-100 aspect-square">
+                    <img src="${item.url}" alt="${item.caption}" class="w-full h-full object-cover hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/400x400/f87171/ffffff?text=Caca'">
+                </div>
+                <p class="font-handwriting text-xl text-stone-700 mt-3 font-semibold">${item.caption}</p>
+            </div>
+        `).join('');
+    }
 }
 
 function triggerPhotoConfetti() {
